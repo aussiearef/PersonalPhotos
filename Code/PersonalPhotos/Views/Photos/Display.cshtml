@@ -8,6 +8,11 @@
 
 <h2>Photo Gallery</h2>
 <div class="content">
+    <div class="row">
+        <div class="col-lg-12 h2">
+            <a class="btn btn-danger glyphicon-plus" asp-controller="Photos" asp-action="Upload"> ADD PHOTO</a>
+        </div>
+    </div>
     @{
         const string root = "/PhotoStore";
         var key = _KeyGenerator.GetKey(Model);
@@ -25,7 +30,7 @@
                                 @{
                                     var source = $"{root}/{key}/{photo.FileName}";
                                 }
-                                <img src="@source" class="img-thumbnail" />
+                                <img src="@source" class="img-thumbnail"/>
                                 <figcaption>@photo.Description</figcaption>
                             </figure>
                         </div>
