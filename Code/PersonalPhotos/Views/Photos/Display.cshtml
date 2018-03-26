@@ -1,0 +1,40 @@
+﻿@using Core.Interfaces
+@model string
+@{
+    ViewData["Title"] = "Photo Gallery";
+}
+@inject IKeyGenerator _KeyGenerator
+@inject IPhotoMetaData _PhotoMetaData
+
+<h2>Photo Gallery</h2>
+<div class="content">
+    @{
+        const string root = "/PhotoStore";
+        var key = _KeyGenerator.GetKey(Model);
+        var photos = await _PhotoMetaData.GetUserPhotos(Model);
+
+        while (photos.Count > 0)
+        {
+            <div class="row">
+                @{
+                    var threePhotos = photos.Take(3);
+                    foreach (var photo in threePhotos)
+                    {
+                        <div class="col-md-4">
+                            <figure>
+                                @{
+                                    var source = $"{root}/{key}/{photo.FileName}";
+                                }
+                                <img src="@source" class="img-thumbnail" />
+                                <figcaption>@photo.Description</figcaption>
+                            </figure>
+                        </div>
+                    }
+                    var toDelete = photos.Count >= 3 ? 3 : photos.Count;
+                    photos.RemoveRange(0, toDelete);
+                }
+            </div>
+        }
+    }
+</div>
+

@@ -1,0 +1,26 @@
+﻿@model PhotoUploadViewModel
+@{
+    ViewData["Title"] = "Upload Photo";
+}
+
+<h2>Upload Your Photo!</h2>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            @Html.ValidationSummary()
+            <form method="post" asp-controller="Photos" asp-action="Upload" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Choose a file:</label>
+                    <input type="file" id="File" name="File" asp-for="File"/>
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description:</label>
+                    <input type="text" id="Description" asp-for="Description"/>
+                </div>
+                <input type="submit" value="Submit"/>
+            </form>
+        </div>
+    </div>
+</div>
