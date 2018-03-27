@@ -10,5 +10,7 @@ namespace PersonalPhotos.Models
 
         [Required(ErrorMessage = "Please provide password")]
         public string Password { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

@@ -48,7 +48,7 @@ namespace PersonalPhotos
             {
                 routes.MapRoute(
                     "default",
-                    "{controller=Home}/{action=Index}/{id?}");
+                    "{controller=Photos}/{action=Display}");
             });
         }
     }

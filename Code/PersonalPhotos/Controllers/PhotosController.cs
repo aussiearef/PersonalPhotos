@@ -43,7 +43,7 @@ namespace PersonalPhotos.Controllers
                 await _photoMetaData.SavePhotoMetaData(userName, model.Description, fileName);
                 await _fileStorage.StoreFile(model.File, uniqueKey);
             }
-            return View();
+            return RedirectToAction("Display");
         }
 
         [ServiceFilter(typeof(LoginAttribute))]

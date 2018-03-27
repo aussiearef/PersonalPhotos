@@ -17,9 +17,10 @@ namespace PersonalPhotos.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string returnUrl = null)
         {
-            return View("Login");
+            var model = new LoginViewModel { ReturnUrl = returnUrl};
+            return View("Login", model);
         }
 
         [HttpPost]
@@ -51,7 +52,14 @@ namespace PersonalPhotos.Controllers
                 return View("Login", model);
             }
 
-            return RedirectToAction("Display", "Photos");
+            if (!string.IsNullOrEmpty(model.ReturnUrl))
+            {
+                return Redirect(model.ReturnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Display", "Photos");
+            }
         }
 
         public IActionResult Create()

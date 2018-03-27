@@ -10,13 +10,14 @@
         <div class="col-md-8">
             <div asp-validation-summary="ModelOnly" />
             <form method="post" asp-controller="Logins" asp-action="Login">
+                <input type="hidden" asp-for="ReturnUrl" />
                 <p>
                     Please login to use your Personal Photos portal.
                 </p>
 
                 <div class="form-group">
                     <label for="email">Email Address:</label>
-                    <input type="email" id="email" asp-for="Email"/>
+                    <input type="email" id="email" asp-for="Email" />
                 </div>
 
                 <div class="form-group">

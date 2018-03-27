@@ -13,14 +13,21 @@
             <form method="post" asp-controller="Photos" asp-action="Upload" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="file">Choose a file:</label>
-                    <input type="file" id="File" name="File" asp-for="File"/>
+                    <input type="file" id="File" name="File" asp-for="File" />
                 </div>
                 <div class="form-group">
                     <label for="Description">Description:</label>
-                    <input type="text" id="Description" asp-for="Description"/>
+                    <input type="text" id="Description" asp-for="Description"  class="form-control"/>
                 </div>
-                <input type="submit" value="Submit"/>
+                <input type="submit" value="Submit" class="btn btn-info"/>
+                <a asp-action="Display" class="btn btn-danger">Cancel</a>
             </form>
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            
         </div>
     </div>
 </div>
