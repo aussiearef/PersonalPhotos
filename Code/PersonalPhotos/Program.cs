@@ -20,7 +20,6 @@ namespace PersonalPhotos
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .ConfigureLogging((hostingContext, logging) => { logging.AddEventLog(); })
                 .Build();
     }
 }
