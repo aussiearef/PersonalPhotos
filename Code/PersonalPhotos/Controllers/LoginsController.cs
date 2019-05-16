@@ -15,6 +15,7 @@ namespace PersonalPhotos.Controllers
         {
             _loginService = loginService;
             _httpContextAccessor = httpContextAccessor;
+
         }
 
         public IActionResult Index(string returnUrl = null)

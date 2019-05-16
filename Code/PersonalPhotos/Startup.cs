@@ -30,7 +30,6 @@ namespace PersonalPhotos
             services.AddScoped<IPhotoMetaData, SqlPhotoMetaData>();
             services.AddScoped<IFileStorage, LocalFileStorage>();
             services.AddScoped<LoginAttribute>();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
