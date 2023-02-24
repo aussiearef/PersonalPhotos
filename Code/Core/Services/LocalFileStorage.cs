@@ -4,30 +4,31 @@ using Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace Core.Services
+namespace Core.Services;
+
+public class LocalFileStorage : IFileStorage
 {
-    public class LocalFileStorage : IFileStorage
+    private readonly IHostingEnvironment _env;
+
+    public LocalFileStorage(IHostingEnvironment env)
     {
-        private readonly IHostingEnvironment _env;
+        _env = env;
+    }
 
-        public LocalFileStorage(IHostingEnvironment env)
-        {
-            _env = env;
-        }
+    public async Task StoreFile(IFormFile file, string key)
+    {
+        const string rootPath = "PhotoStore";
 
-        public async Task StoreFile(IFormFile file, string key)
-        {
-            const string rootPath = "PhotoStore";
-            var folder = $"{_env.WebRootPath}\\{rootPath}\\{key}";
-            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+        var wwwRootFolder = _env.WebRootPath;
+        var userFolder = Path.Combine(wwwRootFolder, rootPath);
+        var folder = Path.Combine(userFolder, key);
 
-            var fullFilePath = $"{folder}\\{Path.GetFileName(file.FileName)}";
+        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
-            using (var targetStream = new FileStream(fullFilePath, FileMode.Create))
-            {
-                await file.CopyToAsync(targetStream);
-                targetStream.Close();
-            }
-        }
+        var fullFilePath = Path.Combine(folder, Path.GetFileName(file.FileName) ?? string.Empty);
+
+        await using var targetStream = new FileStream(fullFilePath, FileMode.Create);
+        await file.CopyToAsync(targetStream);
+        targetStream.Close();
     }
 }

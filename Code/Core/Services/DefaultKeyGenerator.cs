@@ -1,12 +1,11 @@
 ﻿using Core.Interfaces;
 
-namespace Core.Services
+namespace Core.Services;
+
+public class DefaultKeyGenerator : IKeyGenerator
 {
-    public class DefaultKeyGenerator : IKeyGenerator
+    public string GetKey(string emailAddress)
     {
-        public string GetKey(string emailAddress)
-        {
-            return emailAddress.Replace("@", string.Empty).Replace(".", string.Empty);
-        }
+        return emailAddress.Replace("@", string.Empty).Replace(".", string.Empty);
     }
 }

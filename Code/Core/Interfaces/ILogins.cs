@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Core.Models;
 
-namespace Core.Interfaces
+namespace Core.Interfaces;
+
+public interface ILogins
 {
-    public interface ILogins
-    {
-        Task CreateUser(string email, string password);
-        Task<User> GetUser(string email);
-    }
+    Task CreateUser(string email, string password);
+    Task<User> GetUser(string email);
 }

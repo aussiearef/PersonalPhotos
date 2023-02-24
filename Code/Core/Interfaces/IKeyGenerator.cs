@@ -1,7 +1,6 @@
-﻿namespace Core.Interfaces
+﻿namespace Core.Interfaces;
+
+public interface IKeyGenerator
 {
-    public interface IKeyGenerator
-    {
-        string GetKey(string emailAddress);
-    }
+    string GetKey(string emailAddress);
 }

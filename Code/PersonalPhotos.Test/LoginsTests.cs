@@ -1,25 +1,25 @@
-using PersonalPhotos.Controllers;
-using Xunit;
-using Moq;
+using System.Threading.Tasks;
 using Core.Interfaces;
+using Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using PersonalPhotos.Controllers;
 using PersonalPhotos.Models;
-using System.Threading.Tasks;
-using Core.Models;
+using Xunit;
 
 namespace PersonalPhotos.Test
 {
     public class LoginsTests
     {
+        private readonly Mock<IHttpContextAccessor> _accessor;
         private readonly LoginsController _controller;
         private readonly Mock<ILogins> _logins;
-        private readonly Mock<IHttpContextAccessor> _accessor;
 
         public LoginsTests()
         {
             _logins = new Mock<ILogins>();
-            
+
 
             var session = Mock.Of<ISession>();
             var httpContext = Mock.Of<HttpContext>(x => x.Session == session);
@@ -33,7 +33,7 @@ namespace PersonalPhotos.Test
         [Fact]
         public void Index_GivenNorReturnUrl_ReturnLoginView()
         {
-            var result = (_controller.Index() as ViewResult);
+            var result = _controller.Index() as ViewResult;
 
             Assert.NotNull(result);
             Assert.Equal("Login", result.ViewName, ignoreCase: true);
@@ -52,8 +52,8 @@ namespace PersonalPhotos.Test
         public async Task Login_GivenCorrectPassword_RedirectToDisplayAction()
         {
             const string password = "123";
-            var modelView = Mock.Of<LoginViewModel>(x=> x.Email == "a@b.com" && x.Password== password);
-            var model = Mock.Of<User>(x=> x.Password == password);
+            var modelView = Mock.Of<LoginViewModel>(x => x.Email == "a@b.com" && x.Password == password);
+            var model = Mock.Of<User>(x => x.Password == password);
 
             _logins.Setup(x => x.GetUser(It.IsAny<string>())).ReturnsAsync(model);
 

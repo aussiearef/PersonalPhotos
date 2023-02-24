@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Core.Interfaces
+namespace Core.Interfaces;
+
+public interface IFileStorage
 {
-    public interface IFileStorage
-    {
-        Task StoreFile(IFormFile file, string key);
-    }
+    Task StoreFile(IFormFile file, string key);
 }

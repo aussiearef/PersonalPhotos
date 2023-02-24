@@ -1,8 +1,7 @@
-﻿namespace Core.Models
+﻿namespace Core.Models;
+
+public class User
 {
-    public class User
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+    public string Email { get; set; }
+    public string Password { get; set; }
 }

@@ -1,8 +1,7 @@
-﻿namespace Core.Models
+﻿namespace Core.Models;
+
+public class PhotoModel
 {
-    public class PhotoModel
-    {
-        public string FileName { get; set; }
-        public string Description { get; set; }
-    }
+    public string FileName { get; set; }
+    public string Description { get; set; }
 }
