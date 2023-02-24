@@ -10,7 +10,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0"/>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0-preview5.19227.9"/>
-        <PackageReference Include="System.Data.SqlClient" Version="4.7.0-preview5.19224.8"/>
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.5"/>
     </ItemGroup>
 
     <ItemGroup>
