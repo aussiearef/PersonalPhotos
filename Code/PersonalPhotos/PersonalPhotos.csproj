@@ -20,8 +20,6 @@
 
     <ItemGroup>
         <Folder Include="wwwroot\PhotoStore" />
-        <Folder Include="wwwroot\PhotoStore\" />
-        <Folder Include="wwwroot\PhotoStore\testxunitcoursecom" />
     </ItemGroup>
 
     <ItemGroup>
