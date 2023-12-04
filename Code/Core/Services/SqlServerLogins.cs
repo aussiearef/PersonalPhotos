@@ -4,8 +4,8 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Core.Services;
 

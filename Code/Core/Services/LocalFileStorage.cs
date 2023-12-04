@@ -1,21 +1,21 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Core.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Core.Services;
 
 public class LocalFileStorage : IFileStorage
 {
-    private readonly IHostingEnvironment _env;
+    private readonly IWebHostEnvironment _env;
 
-    public LocalFileStorage(IHostingEnvironment env)
+    public LocalFileStorage(IWebHostEnvironment env)
     {
         _env = env;
     }
 
-    public async Task StoreFile(IFormFile file, string key)
+    public async Task StoreFile(FormFile file, string key)
     {
         const string rootPath = "PhotoStore";
 
@@ -27,7 +27,7 @@ public class LocalFileStorage : IFileStorage
 
         var fullFilePath = Path.Combine(folder, Path.GetFileName(file.FileName) ?? string.Empty);
 
-        await using var targetStream = new FileStream(fullFilePath, FileMode.Create);
+        using var targetStream = new FileStream(fullFilePath, FileMode.Create);
         await file.CopyToAsync(targetStream);
         targetStream.Close();
     }
