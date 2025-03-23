@@ -33,7 +33,7 @@ namespace PersonalPhotos.Test
         [Fact]
         public void Index_GivenNorReturnUrl_ReturnLoginView()
         {
-            var result = _controller.Index() as ViewResult;
+            var result = _controller.Index("") as ViewResult;
 
             Assert.NotNull(result);
             Assert.Equal("Login", result.ViewName, ignoreCase: true);

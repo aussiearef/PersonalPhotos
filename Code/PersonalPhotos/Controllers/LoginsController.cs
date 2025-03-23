@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Core.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using PersonalPhotos.Models;
 
@@ -17,9 +15,9 @@ public class LoginsController : Controller
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public IActionResult Index(string returnUrl = null)
+    public IActionResult Index(string? returnUrl)
     {
-        var model = new LoginViewModel { ReturnUrl = returnUrl };
+        var model = new LoginViewModel { ReturnUrl = returnUrl ?? "" , Email="", Password="" };
         return View("Login", model);
     }
 
@@ -38,7 +36,7 @@ public class LoginsController : Controller
             if (user.Password == model.Password)
             {
                 //ToDo: redirect to home page
-                _httpContextAccessor.HttpContext.Session.SetString("User", model.Email);
+                _httpContextAccessor?.HttpContext?.Session.SetString("User", model.Email);
             }
             else
             {

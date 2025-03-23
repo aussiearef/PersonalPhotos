@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
+﻿using Microsoft.Data.SqlClient;
 using Core.Interfaces;
 using Core.Models;
-using Microsoft.Extensions.Configuration;
-
+using System.Data; 
 
 namespace Core.Services;
 
@@ -15,48 +11,59 @@ public class SqlPhotoMetaData : IPhotoMetaData
 
     public SqlPhotoMetaData(IConfiguration configuration)
     {
-        _configuration = configuration;
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     public async Task<List<PhotoModel>> GetUserPhotos(string userName)
     {
-        var connectionString = _configuration.GetConnectionString("Default");
+        ArgumentNullException.ThrowIfNull(userName, nameof(userName));
+
+        string connectionString = _configuration.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("Connection string 'Default' not found.");
 
         var result = new List<PhotoModel>();
-        using (var conn = new SqlConnection(connectionString))
+        await using var conn = new SqlConnection(connectionString);
+        const string spName = "GetUserPhotos";
+        await using var command = new SqlCommand(spName, conn)
         {
-            const string spName = "GetUserPhotos";
-            var command = conn.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = spName;
-            command.Parameters.AddWithValue("@UserName", userName);
-            await conn.OpenAsync();
-            var reader = await command.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-                result.Add(new PhotoModel
-                {
-                    Description = reader.GetString(reader.GetOrdinal("Description")),
-                    FileName = reader.GetString(reader.GetOrdinal("FileName"))
-                });
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@UserName", userName);
+
+        await conn.OpenAsync();
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            result.Add(new PhotoModel
+            {
+                Description = reader.GetString(reader.GetOrdinal("Description")),
+                FileName = reader.GetString(reader.GetOrdinal("FileName"))
+            });
         }
 
         return result;
     }
 
-    public async Task SavePhotoMetaData(string userName, string desciption, string fileName)
+    public async Task SavePhotoMetaData(string userName, string description, string fileName)
     {
-        var connectionString = _configuration.GetConnectionString("Default");
-        using (var conn = new SqlConnection(connectionString))
+        ArgumentNullException.ThrowIfNull(userName, nameof(userName));
+        ArgumentNullException.ThrowIfNull(description, nameof(description));
+        ArgumentNullException.ThrowIfNull(fileName, nameof(fileName));
+
+        string connectionString = _configuration.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("Connection string 'Default' not found.");
+
+        await using var conn = new SqlConnection(connectionString);
+        const string spName = "SaveMetaData";
+        await using var command = new SqlCommand(spName, conn)
         {
-            const string spName = "SaveMetaData";
-            var command = conn.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = spName;
-            command.Parameters.AddWithValue("@userName", userName);
-            command.Parameters.AddWithValue("@Description", desciption);
-            command.Parameters.AddWithValue("@fileName", fileName);
-            await conn.OpenAsync();
-            await command.ExecuteNonQueryAsync();
-        }
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@UserName", userName);
+        command.Parameters.AddWithValue("@Description", description);
+        command.Parameters.AddWithValue("@FileName", fileName);
+
+        await conn.OpenAsync();
+        await command.ExecuteNonQueryAsync();
     }
 }

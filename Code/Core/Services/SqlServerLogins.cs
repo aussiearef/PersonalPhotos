@@ -1,70 +1,79 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
+﻿using Microsoft.Data.SqlClient;
+using System.Data; 
 using Core.Interfaces;
 using Core.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
+
 
 namespace Core.Services;
 
 public class SqlServerLogins : ILogins
 {
     private readonly string _connectionString;
-    private readonly ILogger _logger;
+    private readonly ILogger<SqlServerLogins> _logger;
 
-    public SqlServerLogins(IConfiguration configuration, ILogger<SqlServerLogins> logger
-    )
+    public SqlServerLogins(IConfiguration configuration, ILogger<SqlServerLogins> logger)
     {
-        _connectionString = configuration.GetConnectionString("Default");
+        ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
+        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+
+        _connectionString = configuration.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("Connection string 'Default' not found.");
         _logger = logger;
     }
 
     public async Task CreateUser(string email, string password)
     {
+        ArgumentNullException.ThrowIfNull(email, nameof(email));
+        ArgumentNullException.ThrowIfNull(password, nameof(password));
+
         try
         {
-            using (var connection = new SqlConnection(_connectionString))
+            await using var connection = new SqlConnection(_connectionString);
+            const string spName = "CreateUser";
+            await using var command = new SqlCommand(spName, connection)
             {
-                var command = connection.CreateCommand();
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "CreateUser";
-                command.Parameters.AddWithValue("@Email", email);
-                command.Parameters.AddWithValue("@Password", password);
-                await connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
+                CommandType = CommandType.StoredProcedure
+            };
+            command.Parameters.AddWithValue("@Email", email);
+            command.Parameters.AddWithValue("@Password", password);
 
-                _logger.LogInformation($"A user with email address of {email} was registered.");
-            }
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+
+            _logger.LogInformation("A user with email address {Email} was registered.", email);
         }
         catch (Exception e)
         {
-            _logger.LogWarning(e, "Error in CreateUser method");
+            _logger.LogWarning(e, "Error creating user with email {Email}", email);
             throw;
         }
     }
 
-    public async Task<User> GetUser(string email)
+    public async Task<User?> GetUser(string email)
     {
-        using (var connection = new SqlConnection(_connectionString))
+        ArgumentNullException.ThrowIfNull(email, nameof(email));
+
+        await using var connection = new SqlConnection(_connectionString);
+        const string spName = "GetUser";
+        await using var command = new SqlCommand(spName, connection)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "GetUser";
-            command.Parameters.AddWithValue("@Email", email);
-            await connection.OpenAsync();
-            var reader = await command.ExecuteReaderAsync();
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@Email", email);
 
-            User result = null;
-            if (await reader.ReadAsync())
-                result = new User
-                {
-                    Email = reader.GetString(reader.GetOrdinal("Email")),
-                    Password = reader.GetString(reader.GetOrdinal("Password"))
-                };
+        await connection.OpenAsync();
+        await using var reader = await command.ExecuteReaderAsync();
 
-            return result;
+        User? result = null;
+        if (await reader.ReadAsync())
+        {
+            result = new User
+            {
+                Email = reader.GetString(reader.GetOrdinal("Email")),
+                Password = reader.GetString(reader.GetOrdinal("Password"))
+            };
         }
+
+        return result;
     }
 }

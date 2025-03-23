@@ -5,5 +5,5 @@ namespace Core.Interfaces;
 
 public interface IFileStorage
 {
-    Task StoreFile(Microsoft.AspNetCore.Http.FormFile file, string key);
+    Task StoreFile(Microsoft.AspNetCore.Http.IFormFile file, string key);
 }

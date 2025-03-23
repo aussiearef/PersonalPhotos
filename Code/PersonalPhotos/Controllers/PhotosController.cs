@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using Core.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using PersonalPhotos.Filters;
 using PersonalPhotos.Models;
@@ -39,10 +36,10 @@ public class PhotosController : Controller
             if (_httpContextAccessor.HttpContext != null)
             {
                 var userName = _httpContextAccessor.HttpContext.Session.GetString("User");
-                var uniqueKey = _keyGenerator.GetKey(userName);
+                var uniqueKey = _keyGenerator.GetKey(userName ?? "");
 
                 var fileName = Path.GetFileName(model.File.FileName);
-                await _photoMetaData.SavePhotoMetaData(userName, model.Description, fileName);
+                await _photoMetaData.SavePhotoMetaData(userName ?? "", model.Description, fileName);
                 await _fileStorage.StoreFile(model.File, uniqueKey);
             }
         }
@@ -53,7 +50,7 @@ public class PhotosController : Controller
     [ServiceFilter(typeof(LoginAttribute))]
     public IActionResult Display()
     {
-        var userName = _httpContextAccessor.HttpContext.Session.GetString("User");
+        var userName = _httpContextAccessor?.HttpContext?.Session.GetString("User");
         return View("Display", userName);
     }
 }
