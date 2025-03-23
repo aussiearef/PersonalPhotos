@@ -22,7 +22,10 @@ jobs:
         dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: Code
     - name: Build
       run: dotnet build --no-restore
+      working-directory: Code
     - name: Test
       run:  dotnet run --project "Code/PersonalPhotos.Test/PersonalPhotos.Test.csproj"
+      working-directory: Code
