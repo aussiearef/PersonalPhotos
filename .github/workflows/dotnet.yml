@@ -27,5 +27,5 @@ jobs:
       run: dotnet build --no-restore
       working-directory: Code
     - name: Test
-      run:  dotnet run --project "Code/PersonalPhotos.Test/PersonalPhotos.Test.csproj"
+      run:  dotnet run --project "PersonalPhotos.Test/PersonalPhotos.Test.csproj"
       working-directory: Code
