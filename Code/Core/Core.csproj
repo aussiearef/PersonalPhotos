@@ -17,7 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
         <!-- Explicitly add ASP.NET Core dependencies -->
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
