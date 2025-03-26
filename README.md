@@ -7,4 +7,4 @@ This code uses .NET 9.
 
 You must have installed .NET 9 SDK, to be able to compbile the code. The C# syntax is matching C# 10, so that if you do not have the Visual Studio 2022 and later, you can still work with the code.
 
-You can install .NET SDK 8 from https://dotnet.microsoft.com/en-us/download/dotnet/9.0
+You can install .NET SDK 9 from https://dotnet.microsoft.com/en-us/download/dotnet/9.0
