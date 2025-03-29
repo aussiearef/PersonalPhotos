@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.202
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.35821.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalPhotos", "PersonalPhotos\PersonalPhotos.csproj", "{744C0F1F-4B91-436B-BA9A-EB6657D65E6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{08C3B461-68E5-4F91-B940-547320533309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalPhotos.Test", "PersonalPhotos.Test\PersonalPhotos.Test.csproj", "{3258FFE6-5524-4756-8232-C755EF5F543E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalPhotos.Test", "PersonalPhotos.Test\PersonalPhotos.Test.csproj", "{34938498-CE38-4E89-A321-FF3CFA8BA140}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{08C3B461-68E5-4F91-B940-547320533309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C3B461-68E5-4F91-B940-547320533309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08C3B461-68E5-4F91-B940-547320533309}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3258FFE6-5524-4756-8232-C755EF5F543E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3258FFE6-5524-4756-8232-C755EF5F543E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3258FFE6-5524-4756-8232-C755EF5F543E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3258FFE6-5524-4756-8232-C755EF5F543E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34938498-CE38-4E89-A321-FF3CFA8BA140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34938498-CE38-4E89-A321-FF3CFA8BA140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34938498-CE38-4E89-A321-FF3CFA8BA140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34938498-CE38-4E89-A321-FF3CFA8BA140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

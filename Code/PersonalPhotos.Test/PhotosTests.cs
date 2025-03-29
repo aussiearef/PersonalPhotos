@@ -1,40 +1,47 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Core.Interfaces;
+﻿using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using PersonalPhotos.Controllers;
 using PersonalPhotos.Models;
-using Xunit;
+using IHttpContextAccessor = Microsoft.AspNetCore.Http.IHttpContextAccessor;
 
-namespace PersonalPhotos.Test
+namespace PersonalPhotos.Test;
+
+public class PhotosTests
 {
-    public class PhotosTests
+    [Fact]
+    public async Task Upload_GivenValidFilePath_RedturnsRedirectToDisplayAction()
     {
-        [Fact]
-        public async Task Upload__GivenFileName_ReturnsDisplayAction()
-        {
-            // Arrange
-            var session = Mock.Of<ISession>();
-            session.Set("User", Encoding.UTF8.GetBytes("a@b.com"));
-            var context = Mock.Of<HttpContext>(x => x.Session == session);
-            var accessor = Mock.Of<IHttpContextAccessor>(x => x.HttpContext == context);
+        // Arrange
+        var fileStorage = new Mock<IFileStorage>();
+        var keyGenerator = new Mock<IKeyGenerator>();
+        var photoMetadata = new Mock<IPhotoMetaData>();
+        var httpContetAccesstor = new Mock<IHttpContextAccessor>();
+        var fromFile = new Mock<IFormFile>();
 
-            var fileStorage = Mock.Of<IFileStorage>();
-            var keyGen = Mock.Of<IKeyGenerator>();
-            var photoMetadata = Mock.Of<IPhotoMetaData>();
+        var viewModel = new Mock<PhotoUploadViewModel>();
+        viewModel.SetupGet(x => x.File).Returns(fromFile.Object);
+       // viewModel.Object.File = fromFile.Object;
 
-            var fromFile = Mock.Of<IFormFile>();
-            var model = Mock.Of<PhotoUploadViewModel>(x => x.File == fromFile);
+        var session = new Mock<ISession>();
+        session.Setup(x => x.Set("User", It.IsAny<byte[]>()));
 
-            var controller = new PhotosController(keyGen, accessor, photoMetadata, fileStorage);
+        var context = new Mock<HttpContext>();
+        context.SetupGet(x => x.Session).Returns(session.Object);
+        httpContetAccesstor.SetupGet(x => x.HttpContext).Returns(context.Object);
 
-            //Act
-            var result = await controller.Upload(model) as RedirectToActionResult;
 
-            //Assert
-            Assert.Equal("Display", result.ActionName, ignoreCase: true);
-        }
+        // Act
+        var controller = new PhotosController(keyGenerator.Object, httpContetAccesstor.Object, photoMetadata.Object,
+            fileStorage.Object);
+
+        var result = await controller.Upload(viewModel.Object) as RedirectToActionResult;
+
+       
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("Display", result.ActionName, ignoreCase:true);
+
     }
 }
