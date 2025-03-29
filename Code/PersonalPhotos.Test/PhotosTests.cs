@@ -21,8 +21,8 @@ public class PhotosTests
         var fromFile = new Mock<IFormFile>();
 
         var viewModel = new Mock<PhotoUploadViewModel>();
-        viewModel.SetupGet(x => x.File).Returns(fromFile.Object);
-       // viewModel.Object.File = fromFile.Object;
+        //viewModel.SetupGet(x => x.File).Returns(fromFile.Object);
+        viewModel.Object.File = fromFile.Object;
 
         var session = new Mock<ISession>();
         session.Setup(x => x.Set("User", It.IsAny<byte[]>()));
