@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <RootNamespace>PersonalPhotos.Test</RootNamespace>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <TargetFramework>net9.0</TargetFramework>
     <!--
     To enable the Microsoft Testing Platform 'dotnet test' experience, add property:
