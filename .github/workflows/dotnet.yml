@@ -27,5 +27,17 @@ jobs:
       run: dotnet build --no-restore
       working-directory: Code
     - name: Test
-      run:  dotnet run --project "PersonalPhotos.Test/PersonalPhotos.Test.csproj"
+      run:  dotnet run --project "PersonalPhotos.Test/PersonalPhotos.Test.csproj" -- --coverage --coverage-output coverage.xml --coverage-output-format cobertura
       working-directory: Code
+    - name: Show Coverage Results
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: Code/coverage.xml
+        badge: true
+        fail_below_min: false
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: '60 80'
