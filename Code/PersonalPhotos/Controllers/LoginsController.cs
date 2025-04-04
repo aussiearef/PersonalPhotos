@@ -4,17 +4,9 @@ using PersonalPhotos.Models;
 
 namespace PersonalPhotos.Controllers;
 
-public class LoginsController : Controller
+public class LoginsController(ILogins loginService, IHttpContextAccessor httpContextAccessor)
+    : Controller
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILogins _loginService;
-
-    public LoginsController(ILogins loginService, IHttpContextAccessor httpContextAccessor)
-    {
-        _loginService = loginService;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     public IActionResult Index(string? returnUrl)
     {
         var model = new LoginViewModel { ReturnUrl = returnUrl ?? "" , Email="", Password="" };
@@ -26,17 +18,17 @@ public class LoginsController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("", "Invalid login detils");
+            ModelState.AddModelError("", "Invalid login details");
             return View("Login", model);
         }
 
-        var user = await _loginService.GetUser(model.Email);
+        var user = await loginService.GetUser(model.Email);
         if (user != null)
         {
             if (user.Password == model.Password)
             {
                 //ToDo: redirect to home page
-                _httpContextAccessor?.HttpContext?.Session.SetString("User", model.Email);
+                httpContextAccessor?.HttpContext?.Session.SetString("User", model.Email);
             }
             else
             {
@@ -69,14 +61,14 @@ public class LoginsController : Controller
             return View(model);
         }
 
-        var existingUser = await _loginService.GetUser(model.Email);
+        var existingUser = await loginService.GetUser(model.Email);
         if (existingUser != null)
         {
-            ModelState.AddModelError("", "This email adress is already registered");
+            ModelState.AddModelError("", "This email address is already registered");
             return View(model);
         }
 
-        await _loginService.CreateUser(model.Email, model.Password);
+        await loginService.CreateUser(model.Email, model.Password);
 
         return RedirectToAction("Index", "Logins");
     }

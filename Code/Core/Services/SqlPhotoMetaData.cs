@@ -24,10 +24,8 @@ public class SqlPhotoMetaData : IPhotoMetaData
         var result = new List<PhotoModel>();
         await using var conn = new SqlConnection(connectionString);
         const string spName = "GetUserPhotos";
-        await using var command = new SqlCommand(spName, conn)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
+        await using var command = new SqlCommand(spName, conn);
+        command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@UserName", userName);
 
         await conn.OpenAsync();
@@ -55,10 +53,8 @@ public class SqlPhotoMetaData : IPhotoMetaData
 
         await using var conn = new SqlConnection(connectionString);
         const string spName = "SaveMetaData";
-        await using var command = new SqlCommand(spName, conn)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
+        await using var command = new SqlCommand(spName, conn);
+        command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@UserName", userName);
         command.Parameters.AddWithValue("@Description", description);
         command.Parameters.AddWithValue("@FileName", fileName);

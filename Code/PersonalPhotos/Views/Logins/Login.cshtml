@@ -3,30 +3,39 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login to use your personal photos portal!</h2>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Login to Your Personal Photos Portal</h2>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <div asp-validation-summary="ModelOnly" />
-            <form method="post" asp-controller="Logins" asp-action="Login">
-                <input type="hidden" asp-for="ReturnUrl" />
-                <p>
-                    Please login to use your Personal Photos portal.
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <form method="post" asp-controller="Logins" asp-action="Login">
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" asp-for="Email" class="form-control" placeholder="Enter your email" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" asp-for="Password" class="form-control" placeholder="Enter your password" required />
+                    </div>
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </div>
+                    
+                </form>
+
+                <hr />
+
+                <p class="text-center mt-3">
+                    Don't have an account? 
+                    <a asp-action="Create" class="fw-bold">Sign Up</a>
                 </p>
-
-                <div class="form-group">
-                    <label for="email">Email Address:</label>
-                    <input type="email" id="email" asp-for="Email" />
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" asp-for="Password" />
-                </div>
-                <input type="submit" class="btn btn-default" value="Login!" />
-            </form>
+            </div>
         </div>
     </div>
 </div>
-

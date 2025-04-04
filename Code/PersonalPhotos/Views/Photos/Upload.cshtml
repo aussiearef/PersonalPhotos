@@ -3,7 +3,7 @@
     ViewData["Title"] = "Upload Photo";
 }
 
-<h2>Upload Your Photo!</h2>
+<h2 class="mt-3">Upload Your Photo!</h2>
 
 
 <div class="container">
@@ -19,8 +19,10 @@
                     <label for="Description">Description:</label>
                     <input type="text" id="Description" placeholder="Description" asp-for="Description"  class="form-control" required />
                 </div>
-                <input type="submit" value="Submit" class="btn btn-info"/>
-                <a asp-action="Display" class="btn btn-danger">Cancel</a>
+                <div class="mt-2">
+                    <input type="submit" value="Submit" class="btn btn-info"/>
+                    <a asp-action="Display" class="btn btn-danger">Cancel</a>
+                </div>
             </form>
         </div>
         

@@ -1,3 +1,17 @@
+
+
+If not exists (select 1 from sys.databases where name='xUnitCourseByAref')
+begin
+	Create Database xUnitCourseByAref
+end
+
+GO
+
+
+Use xUnitCourseByAref;
+
+Go
+
 Create Table Users
 (
 	Id int not null identity(1,1) primary key,

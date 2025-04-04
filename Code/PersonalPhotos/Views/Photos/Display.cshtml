@@ -26,11 +26,14 @@
                     foreach (var photo in threePhotos)
                     {
                         <div class="col-md-3">
-                            <figure>
+                            <figure class="photo-figure">
                                 @{
                                     var source = $"{root}/{key}/{photo.FileName}";
                                 }
-                                <img src="@source" class="img-thumbnail"/>
+                                <!-- Anchor tag links to the full-size image -->
+                                <a href="@source" data-lightbox="gallery" data-title="@photo.Description">
+                                    <img src="@source" class="img-thumbnail photo-img" alt="@photo.Description" />
+                                </a>
                                 <figcaption>@photo.Description</figcaption>
                             </figure>
                         </div>
@@ -42,4 +45,22 @@
         }
     }
 </div>
+
+@* Custom CSS *@
+<style>
+    .photo-img {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        cursor: pointer; /* Make sure the pointer is a hand when hovering */
+    }
+
+        .photo-img:hover {
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+
+    .photo-figure {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+</style>
 
