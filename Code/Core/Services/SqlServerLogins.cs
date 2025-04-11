@@ -75,6 +75,12 @@ public class SqlServerLogins : ILogins
             throw new ArgumentException("Value cannot be null or empty.", nameof(password));
         }
 
+        var emailValidator = new EmailAddressAttribute();
+        if (!emailValidator.IsValid(email))
+        {
+            throw new ArgumentException("The email address is not in a valid format.", nameof(email));
+        }
+        
         await using var connection = new SqlConnection(_connectionString);
         const string spName = "Login";
         await using var command = new SqlCommand(spName, connection)
