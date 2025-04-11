@@ -2,6 +2,7 @@
 using System.Data; 
 using Core.Interfaces;
 using Core.Models;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Core.Services;
@@ -21,10 +22,23 @@ public class SqlServerLogins : ILogins
         _logger = logger;
     }
 
-    public async Task CreateUser(string email, string password)
+    public async Task CreateUser(string email, string password, CancellationToken token)
     {
-        ArgumentNullException.ThrowIfNull(email, nameof(email));
-        ArgumentNullException.ThrowIfNull(password, nameof(password));
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new ArgumentException("Value cannot be null or empty.", nameof(email));
+        }
+
+        if (string.IsNullOrEmpty(password))
+        {
+            throw new ArgumentException("Value cannot be null or empty.", nameof(password));
+        }
+
+        var emailValidator = new EmailAddressAttribute();
+        if (!emailValidator.IsValid(email))
+        {
+            throw new ArgumentException("The email address is not in a valid format.", nameof(email));
+        }
 
         try
         {
@@ -37,8 +51,8 @@ public class SqlServerLogins : ILogins
             command.Parameters.AddWithValue("@Email", email);
             command.Parameters.AddWithValue("@Password", password);
 
-            await connection.OpenAsync();
-            await command.ExecuteNonQueryAsync();
+            await connection.OpenAsync(token);
+            await command.ExecuteNonQueryAsync(token);
 
             _logger.LogInformation("A user with email address {Email} was registered.", email);
         }
@@ -49,7 +63,38 @@ public class SqlServerLogins : ILogins
         }
     }
 
-    public async Task<User?> GetUser(string email)
+    public async Task<UserLoginResult> Login(string email, string password, CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new ArgumentException("Value cannot be null or empty.", nameof(email));
+        }
+
+        if (string.IsNullOrEmpty(password))
+        {
+            throw new ArgumentException("Value cannot be null or empty.", nameof(password));
+        }
+
+        await using var connection = new SqlConnection(_connectionString);
+        const string spName = "Login";
+        await using var command = new SqlCommand(spName, connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 256) { Value = email });
+        command.Parameters.Add(new SqlParameter("@Password", SqlDbType.NVarChar, 256) { Value = password });
+
+        await connection.OpenAsync(token);
+        await using var reader = await command.ExecuteReaderAsync(token);
+
+        if (await reader.ReadAsync(token))
+        {
+            return UserLoginResult.Success;
+        }
+
+        return UserLoginResult.InvalidPassword;
+    }
+    public async Task<User?> GetUser(string email, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(email, nameof(email));
 
@@ -59,21 +104,22 @@ public class SqlServerLogins : ILogins
         {
             CommandType = CommandType.StoredProcedure
         };
-        command.Parameters.AddWithValue("@Email", email);
+        command.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 256) { Value = email });
 
-        await connection.OpenAsync();
+        await connection.OpenAsync(token);
         await using var reader = await command.ExecuteReaderAsync();
 
         User? result = null;
-        if (await reader.ReadAsync())
+        if (await reader.ReadAsync(token))
         {
             result = new User
             {
-                Email = reader.GetString(reader.GetOrdinal("Email")),
-                Password = reader.GetString(reader.GetOrdinal("Password"))
+                Email = reader.GetString(reader.GetOrdinal("Email")) 
             };
         }
 
         return result;
     }
+
 }
+

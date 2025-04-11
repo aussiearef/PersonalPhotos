@@ -4,7 +4,7 @@ using PersonalPhotos.Models;
 
 namespace PersonalPhotos.Controllers;
 
-public class LoginsController(ILogins loginService, IHttpContextAccessor httpContextAccessor)
+public class LoginsController(ILogins loginService)
     : Controller
 {
     public IActionResult Index(string? returnUrl)
@@ -14,7 +14,7 @@ public class LoginsController(ILogins loginService, IHttpContextAccessor httpCon
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model, CancellationToken token)
     {
         if (!ModelState.IsValid)
         {
@@ -22,25 +22,18 @@ public class LoginsController(ILogins loginService, IHttpContextAccessor httpCon
             return View("Login", model);
         }
 
-        var user = await loginService.GetUser(model.Email);
-        if (user != null)
-        {
-            if (user.Password == model.Password)
-            {
-                //ToDo: redirect to home page
-                httpContextAccessor?.HttpContext?.Session.SetString("User", model.Email);
-            }
-            else
-            {
-                ModelState.AddModelError("", "Invalid password");
-                return View("Login", model);
-            }
-        }
-        else
+        var loginResult = await loginService.Login(model.Email, model.Password, token);
+        if (loginResult == UserLoginResult.UserNotFound)
         {
             ModelState.AddModelError("", "User was not found");
             return View("Login", model);
         }
+        if (loginResult == UserLoginResult.InvalidPassword)
+        {
+            ModelState.AddModelError("", "Invalid password");
+            return View("Login", model);
+        }
+        
 
         if (!string.IsNullOrEmpty(model.ReturnUrl))
             return Redirect(model.ReturnUrl);
@@ -53,7 +46,7 @@ public class LoginsController(ILogins loginService, IHttpContextAccessor httpCon
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(LoginViewModel model)
+    public async Task<IActionResult> Create(LoginViewModel model, CancellationToken token)
     {
         if (!ModelState.IsValid)
         {
@@ -61,14 +54,14 @@ public class LoginsController(ILogins loginService, IHttpContextAccessor httpCon
             return View(model);
         }
 
-        var existingUser = await loginService.GetUser(model.Email);
+        var existingUser = await loginService.GetUser(model.Email, token);
         if (existingUser != null)
         {
             ModelState.AddModelError("", "This email address is already registered");
             return View(model);
         }
 
-        await loginService.CreateUser(model.Email, model.Password);
+        await loginService.CreateUser(model.Email, model.Password, token);
 
         return RedirectToAction("Index", "Logins");
     }
