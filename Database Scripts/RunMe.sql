@@ -95,10 +95,18 @@ AS
 	values (@Email, @Password)
 Go
 
-  insert into Users
-  (Email , [Password])
-  VALUES
-  ('test@xunitcourse.com', '123')
+Create Proc Login
+@Email varchar(100),
+@Password varchar(100)
+AS
+	Select top 1 * from Users
+    Where Email = @Email and [password]=@Password;
+Go
 
-  go
+insert into Users
+(Email , [Password])
+VALUES
+('test@xunitcourse.com', '123')
+
+go
   
